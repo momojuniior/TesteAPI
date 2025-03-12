@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Requisições</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <h1>Testando requisições</h1>
+    <button type="button" id="btn_envia_requisicoes">Enviar requisição</button>
+
+    <script>
+        $(document).ready(function () {
+
+            // Exemplo de uso
+            const urlApi = "http://localhost:3000/usuarios"; // Substitua pela API real
+            const dadosParaEnviar = [
+                { nome: "João", idade: 25 },
+                { nome: "Maria", idade: 30 },
+                { nome: "Carlos", idade: 22 }
+            ];
+
+            $("#btn_envia_requisicoes").click(function() {
+                enviarRequisicoesSequenciais(urlApi, dadosParaEnviar);
+            });
+
+            async function enviarRequisicoesSequenciais(url, dadosArray) {
+                for (const dados of dadosArray) {
+                    try {
+                        const inicio = Date.now(); // Marca o tempo antes do envio
+                        const response = await fetch(url, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(dados)
+                        });
+                        const resultado = await response.json();
+                        const tempoGasto = Date.now() - inicio; // Calcula o tempo de resposta
+
+                        console.log(`Resposta:`, resultado, `Tempo: ${tempoGasto}ms`);
+                    } catch (error) {
+                        console.error("Erro:", error);
+                    }
+
+                    // Pode adicionar um delay entre requisições, se necessário
+                    await new Promise(resolve => setTimeout(resolve, 500)); // 500ms de espera
+                }
+            }
+
+            
+        });
+        // enviarRequisicoesSequenciais(urlApi, dadosParaEnviar);
+    </script>
+</body>
+
+</html>
